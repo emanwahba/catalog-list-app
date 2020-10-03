@@ -12,12 +12,12 @@ abstract class BaseDataSource {
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    return Result.success(body)
+                    return Result.Success(body)
                 }
             }
-            return Result.error("${response.code()}" + " " + response.message())
+            return Result.Error("${response.code()}" + " " + response.message())
         } catch (e: Exception) {
-            return Result.error(e.message ?: e.toString())
+            return Result.Error(e.message ?: e.toString())
         }
     }
 }

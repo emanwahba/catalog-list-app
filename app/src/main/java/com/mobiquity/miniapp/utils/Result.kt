@@ -1,6 +1,10 @@
 package com.mobiquity.miniapp.utils
 
-data class Result<out T>(val status: Status, val data: T?, val message: String?) {
+sealed class Result<out T> {
+
+    abstract val status: Status
+    abstract val data: T?
+    abstract val message: String?
 
     enum class Status {
         SUCCESS,
@@ -8,18 +12,18 @@ data class Result<out T>(val status: Status, val data: T?, val message: String?)
         LOADING
     }
 
-    companion object {
 
-        fun <T> success(data: T): Result<T> {
-            return Result(Status.SUCCESS, data, null)
-        }
+    class Success<T>(override val data: T) : Result<T>() {
+        override val status = Status.SUCCESS
+        override val message: String? = null
+    }
 
-        fun <T> error(message: String?, data: T? = null): Result<T> {
-            return Result(Status.ERROR, data, message)
-        }
+    class Error<T>(override val message: String?, override val data: T? = null) : Result<T>() {
+        override val status = Status.ERROR
+    }
 
-        fun <T> loading(data: T? = null): Result<T> {
-            return Result(Status.LOADING, data, null)
-        }
+    class Loading<T>(override val data: T? = null) : Result<T>() {
+        override val status = Status.LOADING
+        override val message: String? = null
     }
 }
